@@ -2,7 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
-import { Search } from '../model/Search';
+import { Hospital } from '../model/Search';
 
 @Component({
   selector: 'app-createhospital',
@@ -25,8 +25,8 @@ export class CreatehospitalComponent implements OnInit {
   showHospitalfilterData: boolean = false;//FOR SHOWING THE FILTERED DATA
   showHospitalData: boolean = true;//TO SHOW ALL THE HOSPITALS
   isClick: boolean = true;
-  seach: Search[]=[];
-  NotFoundMessage:string=""
+  search: Hospital[]=[];
+  NotFoundMessage:string="" 
 
 
    /*---------------------------------------------------------------------------------------------------------------------------------*/
@@ -70,9 +70,9 @@ export class CreatehospitalComponent implements OnInit {
     this.httpService.getHospital().subscribe(
       (data: any) => {
         this.hospitalList = data;
-        this.seach=data;
+        this.search=data;
         // console.log(this.hospitalList);
-        console.log(this.seach)
+        console.log(this.search)
       },
       error => {
         this.showError = true;
@@ -96,11 +96,12 @@ export class CreatehospitalComponent implements OnInit {
     
     if (!!this.modalSearchQuery) { // Double bang operator is used to check whether the value is there or not 
       const searchTerm = this.modalSearchQuery.toLowerCase(); // Convert search query to lowercase
-      this.filteredHospitalList = this.hospitalList.filter((hosp: Search) => hosp.name.toLowerCase() === searchTerm || hosp.location.toLowerCase() === searchTerm || hosp.id == searchTerm);
+      this.filteredHospitalList = this.hospitalList.filter((hosp: Hospital) => hosp.name.toLowerCase().trim() === searchTerm || hosp.location.toLowerCase().trim() === searchTerm || hosp.id == searchTerm);
       console.log(this.filteredHospitalList); 
       if (this.filteredHospitalList.length == 0) {
         this.isClick = false;
         this.NotFoundMessage="No Hospital(s) Found!!"
+        this.showHospitalData=true;
 
       } else {
         this.isClick = true;
@@ -109,6 +110,7 @@ export class CreatehospitalComponent implements OnInit {
       this.isClick = false; // IF THE SEARCH FIELD DOES NOT HAVE ANY VALUE
       //this.filteredHospitalList = null;
       this.NotFoundMessage="Nothing to search"
+      this.showHospitalData=true;
 
     }
   }

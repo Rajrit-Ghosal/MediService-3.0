@@ -1,5 +1,5 @@
 
-export class Search
+export class Hospital
 {
     id!:number;
     name!:string;

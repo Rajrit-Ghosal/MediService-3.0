@@ -62,6 +62,23 @@
                   <span class="text-danger">Please Enter Password.</span>
                 </div>
               </div>
+
+            <!-- Confirm Password input -->
+            <div class="form-outline mb-3">
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" name="confirmPassword" formControlName="confirmPassword" [ngModel]="formModel.confirmPassword">
+              
+              <div *ngIf="itemForm.get('confirmPassword')?.hasError('notSame') && itemForm.get('confirmPassword')?.dirty" class="text-danger">
+                Passwords do not match.
+              </div>
+              
+              <div *ngIf="!itemForm.get('confirmPassword')?.hasError('notSame') && itemForm.get('confirmPassword')?.dirty" class="text-success">
+                Passwords Matched
+              </div>
+            </div>
+
+
+              <!-- Role input -->
               <div class="form-outline mb-4">
                 <label for="role" class="form-label">role</label>
                 <select name="role" formControlName="role" [ngModel]="formModel.role">
@@ -77,16 +94,20 @@
                 </div>  
                   </div>
               
-
+              <!-- Register buttons -->
               <button type="submit" class="btn btn-primary btn-block mb-4" [disabled]="itemForm.invalid">
                 Submit
               </button>
-              <!-- Register buttons -->
+              
             </form>
+
+            
             <div>
               <p class="mb-0  text-center"> <a [routerLink]="['/login']" class="text-primary fw-bold">Go to
                   Login</a></p>
             </div>
+
+            <!-- On Succesfull/Unsuccesful registration-->
             <div *ngIf="showMessage" class="alert alert-success mt-4" role="alert">
               {{responseMessage}}
             </div>
