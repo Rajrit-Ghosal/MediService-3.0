@@ -80,9 +80,9 @@
 
               <!-- Role input -->
               <div class="form-outline mb-4">
-                <label for="role" class="form-label">role</label>
+                <label for="role" class="form-label">Role</label>
                 <select name="role" formControlName="role" [ngModel]="formModel.role">
-                  <option value="null">Choose Role</option>
+                  <option value="null" [disabled]="itemForm">Choose Role</option>
                   <option value="HOSPITAL">HOSPITAL</option>
                   <option value="TECHNICIAN">TECHNICIAN</option>
                   <option value="SUPPLIER">SUPPLIER</option>

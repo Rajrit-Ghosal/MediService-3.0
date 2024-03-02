@@ -1,9 +1,11 @@
 <div class="modal-body">
   <div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="Search Hospital Name or Location or hospitalId" [(ngModel)]="modalSearchQuery">
+    <input type="text" class="form-control search-input" placeholder="Search Hospital Name or Location or hospitalId" [(ngModel)]="modalSearchQuery" id="search-input">
     <button class="btn btn-primary" type="button" (click)="filterHospitalByName()">Search</button>
+    <br>
     <button class="btn btn-secondary" type="button" (click)="closeIt()">Clear</button>
-  </div>
+  </div> 
+  
   <div class="table-responsive" *ngIf="showHospitalfilterData">
     <table class="table table-bordered" >
       <thead class="bg-dark text-white">

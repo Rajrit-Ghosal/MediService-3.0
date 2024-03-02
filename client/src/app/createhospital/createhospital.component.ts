@@ -95,7 +95,7 @@ export class CreatehospitalComponent implements OnInit {
     this.showHospitalData = false; // TO DISABLE ALL THE HOSPITAL LIST
     
     if (!!this.modalSearchQuery) { // Double bang operator is used to check whether the value is there or not 
-      const searchTerm = this.modalSearchQuery.toLowerCase(); // Convert search query to lowercase
+      const searchTerm = this.modalSearchQuery.toLowerCase().trim(); // Convert search query to lowercase and the trim it
       this.filteredHospitalList = this.hospitalList.filter((hosp: Hospital) => hosp.name.toLowerCase().trim() === searchTerm || hosp.location.toLowerCase().trim() === searchTerm || hosp.id == searchTerm);
       console.log(this.filteredHospitalList); 
       if (this.filteredHospitalList.length == 0) {

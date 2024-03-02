@@ -10,3 +10,11 @@
 .btn{
     border-radius: 20px;
 }
+
+
+/* CSS to change color of navigation links on hover */
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: yellow /* Change to your desired color */
+  }
+  
