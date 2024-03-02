@@ -22,6 +22,7 @@ export class RequestequipmentComponent implements OnInit {
   showMessage: any;
   responseMessage: any;
   equipmentList: any = [];
+  isClick:boolean=false;
   constructor(public router: Router, public httpService: HttpService, private formBuilder: FormBuilder, private authService: AuthService) {
     this.itemForm = this.formBuilder.group({
       orderDate: [this.formModel.scheduledDate, [Validators.required, this.dateValidator]],
@@ -110,6 +111,20 @@ export class RequestequipmentComponent implements OnInit {
       console.error('Login error:', error);
     });;
   }
+
+  showStatus(){
+    if(this.isClick==false)
+    {
+    this.isClick=true;
+    }
+    else{
+      this.isClick=false;
+    }
+    
+  }
+
+
+
   getStatusStyle(status: string) {
     if (status === 'Delivered') {
       return { 'color': 'green', 'font-weight': 'bold', 'font-size':'20px' };
