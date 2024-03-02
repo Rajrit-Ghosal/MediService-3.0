@@ -22,6 +22,7 @@ export class ScheduleMaintenanceComponent implements OnInit {
   showMessage: any;
   responseMessage: any;
   equipmentList: any=[];
+  isClick:boolean=false;
   constructor(public router:Router, public httpService:HttpService, private formBuilder: FormBuilder, private authService:AuthService) 
     {
       this.itemForm = this.formBuilder.group({
@@ -100,6 +101,23 @@ export class ScheduleMaintenanceComponent implements OnInit {
       this.itemForm.markAllAsTouched();
     }
   }
+  
+  showSatus(){
+    if(this.isClick==false)
+    {
+      this.isClick=true;
+    }
+    else{
+      this.isClick=false;
+    }
+  }
+
+
+
+
+
+
+
   onHospitalSelect($event: any) {
    let id= $event.target.value
    this.equipmentList=[];
