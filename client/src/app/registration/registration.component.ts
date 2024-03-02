@@ -38,7 +38,12 @@ export class RegistrationComponent {
     this.bookService.registerUser(this.itemForm.value).subscribe(
       (response: any) => {
         this.showMessage = true;
-        this.responseMessage = response.message || 'Registration successful.';
+        if(response==null){
+          this.showError=false;
+          this.responseMessage="User Already Exist";
+        }else{
+        this.responseMessage ='Registration successful.';
+        }
       },
       (error: any) => {
         this.showError = true;
