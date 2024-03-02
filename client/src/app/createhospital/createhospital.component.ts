@@ -1,10 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
-import { AuthService } from '../../services/auth.service';
-
-
+import { Search } from '../model/Search';
 
 @Component({
   selector: 'app-createhospital',
@@ -12,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./createhospital.component.scss']
 })
 export class CreatehospitalComponent implements OnInit {
+  isdubclicked: boolean = true;
   itemForm: FormGroup;
   equipmentForm: FormGroup;
   formModel: any = { status: null };
@@ -19,94 +18,167 @@ export class CreatehospitalComponent implements OnInit {
   errorMessage: any;
   hospitalList: any = [];
   assignModel: any = {};
-
+  filteredHospitalList: any = []; // Newly added property to store filtered hospitals
+  modalSearchQuery: any;
   showMessage: any;
   responseMessage: any;
-  constructor(public router: Router, public httpService: HttpService, private formBuilder: FormBuilder, private authService: AuthService) {
-    // storing the input in the form using formGroup
+  showHospitalfilterData: boolean = false;//FOR SHOWING THE FILTERED DATA
+  showHospitalData: boolean = true;//TO SHOW ALL THE HOSPITALS
+  isClick: boolean = true;
+  seach: Search[]=[];
+  NotFoundMessage:string=""
+
+
+   /*---------------------------------------------------------------------------------------------------------------------------------*/
+  
+
+  constructor(
+    public router: Router,
+    public httpService: HttpService,
+    private formBuilder: FormBuilder,
+  ) {
     this.itemForm = this.formBuilder.group({
       name: [this.formModel.name, [Validators.required]],
       location: [this.formModel.location, [Validators.required]],
-
     });
 
     this.equipmentForm = this.formBuilder.group({
       name: [this.formModel.name, [Validators.required]],
       description: [this.formModel.description, [Validators.required]],
       hospitalId: [this.formModel.hospitalId, [Validators.required]],
-
     });
-
-
   }
-  ngOnInit(): void {
 
+
+   /*---------------------------------------------------------------------------------------------------------------------------------*/
+  
+
+
+
+  ngOnInit(): void {
     this.getHospital();
   }
+
+
+
+ /*---------------------------------------------------------------------------------------------------------------------------------*/
+  
+
+
+
   getHospital() {
-    this.hospitalList = [];
-    this.httpService.getHospital().subscribe((data: any) => {
-      this.hospitalList = data;
-      console.log(this.hospitalList);
-    }, error => {
-      // Handle error
-      this.showError = true;
-      this.errorMessage = "An error occurred while logging in. Please try again later.";
-      console.error('Login error:', error);
-    });;
+    this.httpService.getHospital().subscribe(
+      (data: any) => {
+        this.hospitalList = data;
+        this.seach=data;
+        // console.log(this.hospitalList);
+        console.log(this.seach)
+      },
+      error => {
+        this.showError = true;
+        this.errorMessage = "An error occurred while fetching hospitals. Please try again later.";
+        console.error('Error fetching hospitals:', error);
+      }
+    );
   }
 
 
+
+ /*---------------------------------------------------------------------------------------------------------------------------------*/
+  
+
+/*(hosp: Search) => hosp.name.toLowerCase().includes(searchTerm) */
+
+  //SEACHING HOSPITAL BY IT'S NAME
+  filterHospitalByName() {
+    this.showHospitalfilterData = true; // TO SHOW THE FILTERED HOSPITAL-LIST
+    this.showHospitalData = false; // TO DISABLE ALL THE HOSPITAL LIST
+    
+    if (!!this.modalSearchQuery) { // Double bang operator is used to check whether the value is there or not 
+      const searchTerm = this.modalSearchQuery.toLowerCase(); // Convert search query to lowercase
+      this.filteredHospitalList = this.hospitalList.filter((hosp: Search) => hosp.name.toLowerCase() === searchTerm || hosp.location.toLowerCase() === searchTerm || hosp.id == searchTerm);
+      console.log(this.filteredHospitalList); 
+      if (this.filteredHospitalList.length == 0) {
+        this.isClick = false;
+        this.NotFoundMessage="No Data Found!!"
+
+      } else {
+        this.isClick = true;
+      }
+    } else {
+      this.isClick = false; // IF THE SEARCH FIELD DOES NOT HAVE ANY VALUE
+      //this.filteredHospitalList = null;
+      this.NotFoundMessage="No Data Found!!"
+
+    }
+  }
+  
+
+  /*---------------------------------------------------------------------------------------------------------------------------------*/
+   
+  
+  
+  //CLOSING THE LIST OF FILTERED SEARCHED HOSPITAL-lIST-->(to search)
+  closeIt() {
+    this.showHospitalfilterData = false;
+    this.showHospitalData = true;
+    this.modalSearchQuery=""
+  }
+
+
+  /*---------------------------------------------------------------------------------------------------------------------------------*/
+  
+  
+  
   onSubmit() {
     if (this.itemForm.valid) {
-      if (this.itemForm.valid) {
-        this.showError = false;
-        this.httpService.createHospital(this.itemForm.value).subscribe((data: any) => {
+      this.httpService.createHospital(this.itemForm.value).subscribe(
+        (data: any) => {
           this.itemForm.reset();
           this.getHospital();
-
-
-        }, error => {
-          // Handle error
+        },
+        error => {
           this.showError = true;
-          this.errorMessage = "An error occurred while logging in. Please try again later.";
-          console.error('Login error:', error);
-        });;
-      } else {
-        this.itemForm.markAllAsTouched();
-      }
-    }
-    else {
+          this.errorMessage = "An error occurred while creating hospital. Please try again later.";
+          console.error('Error creating hospital:', error);
+        }
+      );
+    } else {
       this.itemForm.markAllAsTouched();
     }
   }
+
+
+
+   /*---------------------------------------------------------------------------------------------------------------------------------*/
+  
+
   Addequipment(value: any) {
     this.equipmentForm.controls['hospitalId'].setValue(value.id);
-    this.showMessage = false;
   }
+
+
+
+
+   /*---------------------------------------------------------------------------------------------------------------------------------*/
+  
+
   submitEquipment() {
     if (this.equipmentForm.valid) {
-      if (this.equipmentForm.valid) {
-        //this.showError = false;
-        this.httpService.addEquipment(this.equipmentForm.value,this.equipmentForm.controls['hospitalId'].value).subscribe((data: any) => {
-          this.showMessage=true
-          this.responseMessage=`Equipment Added Successfully`
-          this.equipmentForm.reset()
-
-
-        }, error => {
-          // Handle error
+      this.showMessage = false;
+      this.httpService.addEquipment(this.equipmentForm.value, this.equipmentForm.controls['hospitalId'].value).subscribe(
+        (data: any) => {
+          this.showMessage = true;
+          this.responseMessage = `Equipment added successfully`;
+        },
+        error => {
           this.showError = true;
           this.errorMessage = "An error occurred while adding equipment. Please try again later.";
-          console.error('Login error:', error);
-        });;
-      } else {
-        this.equipmentForm.markAllAsTouched();
-      }
-    }
-    else {
+          console.error('Error adding equipment:', error);
+        }
+      );
+    } else {
       this.equipmentForm.markAllAsTouched();
     }
   }
-
 }

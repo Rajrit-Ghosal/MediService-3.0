@@ -21,11 +21,8 @@ public class UserService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     public User registerUser(User user) {
-<<<<<<< HEAD
         // if(userRepository.findByUsername(user.getUsername()) != null){
-=======
         // if(userRepository.findByRole(user.getRole()) != null || userRepository.findByUsername(user.getUsername()) != null){
->>>>>>> Jigar
         //     return null;
         // }else{
             user.setPassword(passwordEncoder.encode(user.getPassword()));

@@ -1,142 +1,147 @@
-<div class="d-flex justify-content-between mt-4">
-  <h2 class="mb-0">Manage Hospital</h2>
-
+<div class="modal-body">
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Search Hospital Name or Location or hospitalId" [(ngModel)]="modalSearchQuery">
+    <button class="btn btn-primary" type="button" (click)="filterHospitalByName()">Search</button>
+    <button class="btn btn-secondary" type="button" (click)="closeIt()">Clear</button>
+  </div>
+  <div class="table-responsive" *ngIf="showHospitalfilterData">
+    <table class="table table-bordered" >
+      <thead class="bg-dark text-white">
+        <div *ngIf="isClick!==true" id="errorSeach">
+              {{NotFoundMessage}}
+        </div>
+        <tr *ngIf="isClick===true">
+          <th>Hospital ID</th>
+          <th>Hospital Name</th>
+          <th>Location</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="isClick==true">
+        <tr *ngFor="let hospital of filteredHospitalList">
+          <td>{{ hospital.id }}</td>
+          <td>{{ hospital.name }}</td>
+          <td>{{ hospital.location }}</td>
+          <td>
+            <button class="btn btn-primary" (click)="Addequipment(hospital)" data-bs-toggle="modal" data-bs-target="#driverModal">Assign Equipments</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+  </div>
 </div>
-<div class="row mt-3" class="container mt-4 mx-5">
-  <div class="card">
-    <div class="card-header">
-      Add Hospital
-    </div>
-    <div class="card-body">
-      <form class="mb-3 mt-md-4" [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-        <div class="row">
-          <div class="col-md-5">
-            <div class="mb-3">
-              <label for="content" class="form-label ">Hospital Name</label>
-              <input type="content" name="name" formControlName="name" [ngModel]="formModel.name" class="form-control"
-                id="name" placeholder="name">
-              <div
-                *ngIf="itemForm.controls['name'].invalid && (itemForm.controls['name'].dirty || itemForm.controls['name'].touched)"
-                class="ng-dirty">
-                <span *ngIf="itemForm.controls['name'].errors">
-                  <span class="text-danger">Please Enter name .</span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-5">
-            <div class="mb-3">
-              <label for="location" class="form-label ">Location</label>
-              <input type="location" name="location" formControlName="location" [ngModel]="formModel.location"
-                class="form-control" id="location" placeholder="location">
-              <div
-                *ngIf="itemForm.controls['location'].invalid && (itemForm.controls['location'].dirty || itemForm.controls['location'].touched)"
-                class="ng-dirty">
-                <span *ngIf="itemForm.controls['location'].errors">
-                  <span class="text-danger">Please Enter location .</span>
-                </span>
-              </div>
-            </div>
-          </div>
 
-          <div class="col-md-2">
-            <div class="d-grid">
-              <br>
-              <button class="btn btn-outline-dark mt-1" type="submit">Submit</button>
+
+<!-- <div class="container-fluid" style="background-image: url(''); background-size: cover;"> -->
+  <div class="container-fluid">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h2 class="text-center text-black fw-bold mb-4" style="padding: 10px; font-family: Verdana, Geneva, Tahoma, sans-serif;">Manage Hospital</h2>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <div class="card shadow" style="background-color: rgba(151, 191, 255, 0.915);">
+          <div class="card-header fw-bold" style="font-family: Verdana, Geneva, Tahoma, sans-serif;background-color: rgba(131, 155, 194, 0.915);">
+            Add Hospital
+          </div>
+          <div class="card-body">
+            <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="animate__animated animate__fadeIn">
+              <div class="mb-3">
+                <label for="name" class="form-label fw-bold">Hospital Name</label>
+                <input formControlName="name" type="text" class="form-control" [ngModel]="formModel.name" placeholder="Name of Hospital">
+                <div *ngIf="itemForm.get('name')?.invalid && (itemForm.get('name')?.dirty || itemForm.get('name')?.touched)" class="text-danger">
+                  <span *ngIf="itemForm.controls['name'].errors">
+                    <span class="text-danger fw-bold">*Please Enter name</span>
+                  </span>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="location" class="form-label fw-bold">Hospital Location</label>
+                <input formControlName="location" type="text" class="form-control" [ngModel]="formModel.location" placeholder="Location of Hospital">
+                <div *ngIf="itemForm.get('location')?.invalid && (itemForm.get('location')?.dirty || itemForm.get('location')?.touched)" class="text-danger">
+                  <span *ngIf="itemForm.controls['location'].errors">
+                    <span class="text-danger fw-bold">*Please Enter location</span>
+                  </span>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-lg btn-block">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-5" *ngIf="showHospitalData">
+      <div class="col-md-12">
+        <div class="card shadow" style="background-color: rgba(151, 191, 255, 0.915);">
+          <div class="card-header fw-bold" style="background-color: rgba(131, 155, 194, 0.915);">
+            Hospital Information
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead class="bg-dark text-white">
+                  <tr>
+                    <th>Hospital ID</th>
+                    <th>Hospital Name</th>
+                    <th>Location</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let hospital of hospitalList">
+                    <td>{{ hospital.id }}</td>
+                    <td>{{ hospital.name }}</td>
+                    <td>{{ hospital.location }}</td>
+                    <td>
+                      <button class="btn btn-primary" (click)="Addequipment(hospital)" data-bs-toggle="modal" data-bs-target="#driverModal">Assign Equipments</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
-
-
-
-
-      </form>
+      </div>
     </div>
   </div>
 </div>
-<div class="row mt-3" class="container mt-4 mx-5">
-  <div class="card">
-    <div class="card-header">Hospital Information</div>
-  </div>
-  <div class="card-body">
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Sr#</th>
-            <th>Hospital Name</th>
-            <th>Location</th>
-
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let hospital of hospitalList">
-            <td>{{hospital.id}}</td>
-            <td>{{hospital.name}}</td>
-            <td>{{hospital.location}}</td>
-
-            <td>
-              <button data-bs-toggle="modal" (click)="Addequipment(hospital)" data-bs-target="#driverModal"
-                class="btn btn-primary">Assign Equipments</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-</div>
-
 
 <div class="modal fade" id="driverModal" tabindex="-1" aria-labelledby="driverModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="driverModalLabel">Assign Equipment </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+        <h5 class="modal-title" id="driverModalLabel">Assign Equipment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form class="mb-3 mt-md-4" [formGroup]="equipmentForm" (ngSubmit)="submitEquipment()">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="mb-3">
-                <input type="hidden" name="hospitalId" id="hospitalId" formControlName="hospitalId">
-                <label for="content" class="form-label">Equipment</label>
-                <input type="content" name="name" formControlName="name" [ngModel]="formModel.name"
-                  class="form-control" id="name" placeholder="name">
-                <div *ngIf="equipmentForm.get('name')?.invalid && (equipmentForm.get('name')?.dirty || equipmentForm.get('name')?.touched)"
-                  class="ng-dirty">
-                  <span *ngIf="equipmentForm.get('name')?.errors">
-                    <span class="text-danger">Please Enter Equipment Name .</span>
-                  </span>
-                </div>
-              </div>
+        <form [formGroup]="equipmentForm" (ngSubmit)="submitEquipment()" class="animate__animated animate__fadeIn">
+          <div class="mb-3">
+            <input type="hidden" formControlName="hospitalId">
+            <label for="name" class="form-label fw-bold">Equipment Name</label>
+            <input type="text" formControlName="name" class="form-control" [ngModel]="formModel.name" placeholder="Name of Equipment">
+            <div *ngIf="equipmentForm.get('name')?.invalid && (equipmentForm.get('name')?.dirty || equipmentForm.get('name')?.touched)" class="text-danger">
+              <span *ngIf="equipmentForm.controls['name'].errors">
+                <span class="text-danger fw-bold">*Please Enter name .</span>
+              </span>
             </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="mb-3">
-                  <label for="description" class="form-label" required>Description</label>
-                  <input type="text" name="description" formControlName="description"
-                    [ngModel]="formModel.description" class="form-control" id="description" placeholder="description">
-                  <div
-                    *ngIf="equipmentForm.controls['description'].invalid && (equipmentForm.controls['description'].dirty || equipmentForm.controls['description'].touched)"
-                    class="ng-dirty">
-                    <span *ngIf="equipmentForm.controls['description'].errors">
-                      <span class="text-danger">Please Enter description .</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Description</label>
+            <input type="text" formControlName="description" class="form-control" [ngModel]="formModel.description" placeholder="Description">
+            <div *ngIf="equipmentForm.get('description')?.invalid && (equipmentForm.get('description')?.dirty || equipmentForm.get('description')?.touched)" class="text-danger">
+              <span *ngIf="equipmentForm.controls['description'].errors">
+                <span class="text-danger fw-bold">*Please Enter description .</span>
+              </span>
             </div>
-
-
           </div>
           <div *ngIf="showMessage" class="alert alert-success mt-4" role="alert">
             {{responseMessage}}
           </div>
           <div *ngIf="showError" class="alert alert-danger" role="alert">
-            <p>An error occurred while adding equipment. Please try again later.</p>
+            {{errorMessage}}
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -144,7 +149,6 @@
           </div>
         </form>
       </div>
-
     </div>
   </div>
 </div>
