@@ -69,11 +69,11 @@
               <input type="password" name="confirmPassword" formControlName="confirmPassword" [ngModel]="formModel.confirmPassword">
               
               <div *ngIf="itemForm.get('confirmPassword')?.hasError('notSame') && itemForm.get('confirmPassword')?.dirty" class="text-danger">
-                Passwords do not match.
+                Password do not match.
               </div>
               
               <div *ngIf="!itemForm.get('confirmPassword')?.hasError('notSame') && itemForm.get('confirmPassword')?.dirty" class="text-success">
-                Passwords Matched
+                Password Matched
               </div>
             </div>
 
