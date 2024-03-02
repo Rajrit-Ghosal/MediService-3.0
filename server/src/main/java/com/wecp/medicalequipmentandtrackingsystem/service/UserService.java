@@ -21,12 +21,15 @@ public class UserService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     public User registerUser(User user) {
-        if(userRepository.findByRole(user.getRole()) != null || userRepository.findByUsername(user.getUsername()) != null){
-            return null;
-        }else{
+        User user1 = userRepository.findByUsername(user.getUsername()).get();
+        if(user1 == null){
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepository.save(user);
+        }else{
+            return null;
         }
+            
+        
         
     }
 

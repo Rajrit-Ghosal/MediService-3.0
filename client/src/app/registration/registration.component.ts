@@ -44,7 +44,7 @@ export class RegistrationComponent {
         this.showMessage = true;
         if(response==null){
           this.showMessage=false;
-          this.responseMessage="Try with another username or role";
+          this.responseMessage="Try with another username";
         }
         this.responseMessage = response.message || 'Registration successful.';
       },
