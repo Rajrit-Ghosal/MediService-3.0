@@ -9,13 +9,15 @@ import { HttpService } from '../../services/http.service';
   styleUrls: ['./registration.component.scss']
 })
 export class RegistrationComponent {
-
   itemForm: FormGroup;
   formModel: any = { role: null, email: '', password: '', username: '' , confirmPassword: ''};
   showMessage: boolean = false;
   showError:boolean=false;
   responseMessage: any;
   passwordMatched:boolean=false;
+  successM:boolean=true;
+  errorM:boolean=true;
+  
   constructor(public router: Router, private bookService: HttpService, private formBuilder: FormBuilder) {
 
     this.itemForm = this.formBuilder.group({
@@ -27,10 +29,13 @@ export class RegistrationComponent {
       role: [this.formModel.role, Validators.required]},
       { validators: this.checkPasswords }
       );
-  }
 
-  ngOnInit(): void {
-  }
+
+}
+  
+   ngOnInit(): void {
+   }
+
 
   onRegister() {
 

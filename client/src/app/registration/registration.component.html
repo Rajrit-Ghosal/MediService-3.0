@@ -67,14 +67,15 @@
             <div class="form-outline mb-3">
               <label for="confirmPassword" class="form-label">Confirm Password</label>
               <input type="password" name="confirmPassword" formControlName="confirmPassword" [ngModel]="formModel.confirmPassword">
-              
+      
               <div *ngIf="itemForm.get('confirmPassword')?.hasError('notSame') && itemForm.get('confirmPassword')?.dirty" class="text-danger">
                 Password do not match.
-              </div>
-              
+            
+            </div>
+             
               <div *ngIf="!itemForm.get('confirmPassword')?.hasError('notSame') && itemForm.get('confirmPassword')?.dirty" class="text-success">
                 Password Matched
-              </div>
+            </div>
               <!-- <div *ngIf="itemForm.get('confirmPassword')?.hasError('required')">
                 Please Enter Confirm Password
               </div> -->

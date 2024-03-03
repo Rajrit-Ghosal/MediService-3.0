@@ -127,7 +127,7 @@
       <div class="modal-body">
         <form [formGroup]="equipmentForm" (ngSubmit)="submitEquipment()" class="animate__animated animate__fadeIn">
           <div class="mb-3">
-            <input type="hidden" formControlName="hospitalId">
+            <input formControlName="hospitalId" type="hidden">
             <label for="name" class="form-label fw-bold">Equipment Name</label>
             <input type="text" formControlName="name" class="form-control" [ngModel]="formModel.name" placeholder="Name of Equipment">
             <div *ngIf="equipmentForm.get('name')?.invalid && (equipmentForm.get('name')?.dirty || equipmentForm.get('name')?.touched)" class="text-danger">
