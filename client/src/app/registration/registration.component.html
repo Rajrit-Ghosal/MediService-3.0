@@ -75,6 +75,9 @@
               <div *ngIf="!itemForm.get('confirmPassword')?.hasError('notSame') && itemForm.get('confirmPassword')?.dirty" class="text-success">
                 Password Matched
               </div>
+              <!-- <div *ngIf="itemForm.get('confirmPassword')?.hasError('required')">
+                Please Enter Confirm Password
+              </div> -->
             </div>
 
 

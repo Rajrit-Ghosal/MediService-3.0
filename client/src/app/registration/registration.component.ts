@@ -64,7 +64,7 @@ export class RegistrationComponent {
 
     if (password !== confirmPassword) {
       group.get('confirmPassword')?.setErrors({ notSame: true }); 
-    } else {
+    } else if(password===confirmPassword && confirmPassword!==""){
       group.get('confirmPassword')?.setErrors(null); // Clear error if passwords match
     }
   }
