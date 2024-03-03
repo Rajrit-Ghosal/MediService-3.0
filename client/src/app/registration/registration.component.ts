@@ -42,7 +42,15 @@ export class RegistrationComponent {
           this.showError=false;
           this.responseMessage="User Already Exist";
         }else{
-        this.responseMessage ='Registration successful.';
+          if(this.itemForm.get('role')?.value==='HOSPITAL'){
+            this.responseMessage ='Welcome '+this.itemForm.get('username')?.value+' to our page!!. You are an Admin now';
+            this.itemForm.reset();
+          }
+          else{
+            this.responseMessage ='Welcome '+this.itemForm.get('username')?.value+' to our page!!. You are an '+this.itemForm.get('role')?.value+' now';
+            this.itemForm.reset();
+          }
+        
         }
       },
       (error: any) => {
@@ -62,9 +70,9 @@ export class RegistrationComponent {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
 
-    if (password !== confirmPassword) {
+    if (password !== confirmPassword || password==="") {
       group.get('confirmPassword')?.setErrors({ notSame: true }); 
-    } else if(password===confirmPassword && confirmPassword!==""){
+    } else if(password===confirmPassword){
       group.get('confirmPassword')?.setErrors(null); // Clear error if passwords match
     }
   }

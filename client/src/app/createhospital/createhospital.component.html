@@ -70,6 +70,12 @@
                 </div>
               </div>
               <button class="btn btn-primary btn-lg btn-block" [disabled]="itemForm.invalid">Submit</button>
+              <div *ngIf="showMessage" class="text text-success mt-4" role="alert">
+                {{responseMessage}}
+              </div>
+              <div *ngIf="showError" class="text text-danger mt-4" role="alert">
+                {{errorMessage}}
+              </div>
             </form>
           </div>
         </div>

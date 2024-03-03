@@ -131,25 +131,42 @@ export class CreatehospitalComponent implements OnInit {
   /*---------------------------------------------------------------------------------------------------------------------------------*/
   
   
-  
-  onSubmit() {
+    onSubmit() {
     if (this.itemForm.valid) {
-      this.httpService.createHospital(this.itemForm.value).subscribe(
-        (data: any) => {
-          this.itemForm.reset();
-          this.getHospital();
-        },
-        error => {
-          this.showError = true;
-          this.errorMessage = "An error occurred while creating hospital. Please try again later.";
-          console.error('Error creating hospital:', error);
-        }
-      );
+      const newHospitalName = this.itemForm.value.name.toLowerCase().trim();
+      const newHospitalLocation = this.itemForm.value.location.toLowerCase().trim();
+  
+      // Check if the new hospital name or location already exists
+      const isDuplicate = this.hospitalList.some((hospital:Hospital) => {
+        return hospital.name.toLowerCase().trim() === newHospitalName && hospital.location.toLowerCase().trim() === newHospitalLocation;
+      });
+  
+      if (isDuplicate) {
+        // Show error message for duplicate hospital
+        this.showError = true;
+        this.errorMessage = "This hospital already exists.";
+        this.showMessage=false;
+      } else {
+        // If not a duplicate, proceed to add the hospital
+        this.httpService.createHospital(this.itemForm.value).subscribe(
+          (data: any) => {
+            this.itemForm.reset();
+            this.getHospital();
+            this.showMessage = true;
+            this.responseMessage = `Hospital added successfully`;
+            this.showError=false;
+          },
+          error => {
+            this.showError = true;
+            this.errorMessage = "An error occurred while creating hospital. Please try again later.";
+            console.error('Error creating hospital:', error);
+          }
+        );
+      }
     } else {
       this.itemForm.markAllAsTouched();
     }
   }
-
 
 
    /*---------------------------------------------------------------------------------------------------------------------------------*/
