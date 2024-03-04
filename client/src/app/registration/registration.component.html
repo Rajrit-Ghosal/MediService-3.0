@@ -48,8 +48,15 @@
                 <div
                   *ngIf="itemForm.get('email')?.invalid && (itemForm.get('email')?.dirty || itemForm.get('email')?.touched)"
                   class="ng-dirty">
-                  <span class="text-danger">Please Enter Email Id.</span>
+                  <!-- <span class="text-danger">Please Enter Email Id.</span> -->
+                  <div *ngIf="itemForm.get('email')?.hasError('required')" class="text text-danger">
+                  Email Required
+                  </div>
+                  <div *ngIf="itemForm.get('email')?.hasError('email')" class="text text-danger">
+                    Not a valid Email 
+                    </div>
                 </div>
+                
                 </div> 
               <!-- Password input -->
               <div class="form-outline mb-3">
@@ -59,7 +66,14 @@
                 <div
                   *ngIf="itemForm.get('password')?.invalid && (itemForm.get('password')?.dirty || itemForm.get('password')?.touched)"
                   class="ng-dirty">
-                  <span class="text-danger">Please Enter Password.</span>
+                  <div  *ngIf="itemForm.get('password')?.hasError('required')"  class="text-danger">Please Enter Password.</div>
+                  <div  *ngIf="itemForm.get('password')?.hasError('pattern')"  class="text-danger">
+                        At least one lowercase alphabet i.e. [a-z]
+                        At least one uppercase alphabet i.e. [A-Z]
+                        At least one Numeric digit i.e. [0-9]
+                        At least one special character i.e. [‘@’, ‘$’, ‘.’, ‘#’, ‘!’, ‘%’, ‘*’, ‘?’, ‘&’, ‘^’]
+                        Also, the total length must be in the range [5-10]
+                  </div>
                 </div>
               </div>
 
@@ -76,9 +90,6 @@
               <div *ngIf="!itemForm.get('confirmPassword')?.hasError('notSame') && itemForm.get('confirmPassword')?.dirty" class="text-success">
                 Password Matched
             </div>
-              <!-- <div *ngIf="itemForm.get('confirmPassword')?.hasError('required')">
-                Please Enter Confirm Password
-              </div> -->
             </div>
 
 

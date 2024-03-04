@@ -14,22 +14,18 @@ export class RegistrationComponent {
   showMessage: boolean = false;
   showError:boolean=false;
   responseMessage: any;
-  passwordMatched:boolean=false;
-  successM:boolean=true;
-  errorM:boolean=true;
   
   constructor(public router: Router, private bookService: HttpService, private formBuilder: FormBuilder) {
 
     this.itemForm = this.formBuilder.group({
-      //complete this function
       username: [this.formModel.username, Validators.required],
-      password: [this.formModel.password, Validators.required],
+      password: [this.formModel.password, [Validators.required,Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$.#!%*?&^])[a-zA-Z0-9@$.#!%*?&^]{5,10}$')]],
       confirmPassword: [this.formModel.confirmPassword, Validators.required],
-      email: [this.formModel.email, Validators.required],
+      email: [this.formModel.email, [Validators.required,Validators.email]],
       role: [this.formModel.role, Validators.required]},
       { validators: this.checkPasswords }
       );
-
+     
 
 }
   
@@ -81,5 +77,6 @@ export class RegistrationComponent {
       group.get('confirmPassword')?.setErrors(null); // Clear error if passwords match
     }
   }
+  
   
 }
