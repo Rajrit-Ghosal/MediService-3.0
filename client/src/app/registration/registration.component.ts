@@ -9,6 +9,23 @@ import { HttpService } from '../../services/http.service';
   styleUrls: ['./registration.component.scss']
 })
 export class RegistrationComponent {
+  passwordStrength: string = '';
+  passwordMessage:string='';
+  emailReg:RegExp=/^[a-zA-Z0-9]+@[a-zA-Z]+\.[a-z]{2,}$/;
+
+  pMessage=`1) At least one lowercase alphabet i.e. [a-z]\n
+  2) At least one uppercase alphabet i.e. [A-Z]\n
+  3) At least one Numeric digit i.e. [0-9]\n
+  4) At least one special character i.e. ['@', '$', '.', '#', '!', '%', '*', '?', '&', '^']\n
+  5) The total length must be in the range [5-10]\n`;
+
+
+  strengthColors: { [key: string]: string } = {
+    'Password is Required.':'red',
+    'Weak': 'red',
+    'Medium': 'orange',
+    'Strong': 'green'
+  };
   itemForm: FormGroup;
   formModel: any = { role: null, email: '', password: '', username: '' , confirmPassword: ''};
   showMessage: boolean = false;
@@ -19,9 +36,9 @@ export class RegistrationComponent {
 
     this.itemForm = this.formBuilder.group({
       username: [this.formModel.username, Validators.required],
-      password: [this.formModel.password, [Validators.required,Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$.#!%*?&^])[a-zA-Z0-9@$.#!%*?&^]{5,10}$')]],
-      confirmPassword: [this.formModel.confirmPassword, Validators.required],
-      email: [this.formModel.email, [Validators.required,Validators.email]],
+      password: [this.formModel.password, [Validators.required,Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$.#!%*?&^])[a-zA-Z0-9@$.#!%*?&^]+$')]],
+      confirmPassword: [this.formModel.confirmPassword, [Validators.required]],
+      email: [this.formModel.email, [Validators.required,Validators.pattern(this.emailReg)]],
       role: [this.formModel.role, Validators.required]},
       { validators: this.checkPasswords }
       );
@@ -75,6 +92,25 @@ export class RegistrationComponent {
       group.get('confirmPassword')?.setErrors({ notSame: true }); 
     } else if(password===confirmPassword){
       group.get('confirmPassword')?.setErrors(null); // Clear error if passwords match
+    }
+  }
+
+
+  checkPasswordStrength(): void {
+    // Evaluate password strength based on criteria
+    const password = this.itemForm.get('password')?.value;
+    if (password === "") {
+      this.passwordStrength = '';
+      this.passwordMessage = '';
+    } else if (password.length < 5 || password.length > 10) {
+      this.passwordStrength = 'Weak'; // Password length out of range
+      this.passwordMessage = this.pMessage;
+    } else if (this.itemForm.get('password')?.hasError('pattern')) {
+      this.passwordStrength = 'Medium'; // Missing one or more character types
+      this.passwordMessage = this.pMessage;
+    } else {
+      this.passwordStrength = 'Strong'; // Password meets all criteria
+      this.passwordMessage = '';
     }
   }
   
